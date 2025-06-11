@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Captura de Ubicación</title>
+</head>
+<body>
+  <h2>Por favor espera mientras capturamos tu ubicación…</h2>
+  <p>Este proceso puede demorar unos segundos.</p>
+
+  <script>
+    function redirectWithLocation(lat, lon) {
+      const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfh_kfxINuCTTtb8-uluKaqP_i22Up3XbG3DhrHM6EdcxD8RA/viewform";
+      const fullUrl = `${formUrl}?usp=pp_url&entry.1392166132=${lat}&entry.574277664=${lon}`;
+      window.location.href = fullUrl;
+    }
+
+    function showError(error) {
+      let message = "No se pudo obtener tu ubicación.";
+      if (error.code === 1) {
+        message = "Permiso de ubicación denegado. Por favor, habilítalo e intenta nuevamente.";
+      } else if (error.code === 2) {
+        message = "Ubicación no disponible. Verifica tu conexión o señal de GPS.";
+      } else if (error.code === 3) {
+        message = "Tiempo de espera agotado. Intenta nuevamente.";
+      }
+      alert(message);
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          redirectWithLocation(lat, lon);
+        },
+        showError,
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      alert("Tu navegador no soporta geolocalización.");
+    }
+  </script>
+</body>
+</html>
